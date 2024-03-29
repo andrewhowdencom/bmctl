@@ -16,3 +16,16 @@ tasks:
           '. as $item ireduce ({}; . * $item )' \
           camera/documentation/bmcc6kpro/8.6-beta/swagger/**/* \
           > api/gen/8.6-beta/openapi.yaml
+
+  gen-go-client:
+    desc: |
+      Generate the Golang client from the HTTP API
+    vars:
+      TYPES: "types,client,spec"
+    cmds:
+      - for:
+          var: TYPES
+          split: ","
+        cmd: |
+          oapi-codegen-v2.1.0 -package bmcapi -generate {{ .ITEM }} \
+          api/gen/8.6-beta/openapi.yaml > api/gen/8.6-beta/bmcapi/{{ .ITEM }}.go

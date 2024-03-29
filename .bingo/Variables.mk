@@ -7,16 +7,22 @@ GO     ?= $(shell which go)
 
 # Below generated variables ensure that every time a tool under each variable is invoked, the correct version
 # will be used; reinstalling only if needed.
-# For example for task variable:
+# For example for oapi-codegen variable:
 #
 # In your main Makefile (for non array binaries):
 #
 #include .bingo/Variables.mk # Assuming -dir was set to .bingo .
 #
-#command: $(TASK)
-#	@echo "Running task"
-#	@$(TASK) <flags/args..>
+#command: $(OAPI_CODEGEN)
+#	@echo "Running oapi-codegen"
+#	@$(OAPI_CODEGEN) <flags/args..>
 #
+OAPI_CODEGEN := $(GOBIN)/oapi-codegen-v2.1.0
+$(OAPI_CODEGEN): $(BINGO_DIR)/oapi-codegen.mod
+	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.
+	@echo "(re)installing $(GOBIN)/oapi-codegen-v2.1.0"
+	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=oapi-codegen.mod -o=$(GOBIN)/oapi-codegen-v2.1.0 "github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen"
+
 TASK := $(GOBIN)/task-v3.35.1
 $(TASK): $(BINGO_DIR)/task.mod
 	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.
