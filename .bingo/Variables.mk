@@ -7,16 +7,22 @@ GO     ?= $(shell which go)
 
 # Below generated variables ensure that every time a tool under each variable is invoked, the correct version
 # will be used; reinstalling only if needed.
-# For example for oapi-codegen variable:
+# For example for cobra-cli variable:
 #
 # In your main Makefile (for non array binaries):
 #
 #include .bingo/Variables.mk # Assuming -dir was set to .bingo .
 #
-#command: $(OAPI_CODEGEN)
-#	@echo "Running oapi-codegen"
-#	@$(OAPI_CODEGEN) <flags/args..>
+#command: $(COBRA_CLI)
+#	@echo "Running cobra-cli"
+#	@$(COBRA_CLI) <flags/args..>
 #
+COBRA_CLI := $(GOBIN)/cobra-cli-v1.3.0
+$(COBRA_CLI): $(BINGO_DIR)/cobra-cli.mod
+	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.
+	@echo "(re)installing $(GOBIN)/cobra-cli-v1.3.0"
+	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=cobra-cli.mod -o=$(GOBIN)/cobra-cli-v1.3.0 "github.com/spf13/cobra-cli"
+
 OAPI_CODEGEN := $(GOBIN)/oapi-codegen-v2.1.0
 $(OAPI_CODEGEN): $(BINGO_DIR)/oapi-codegen.mod
 	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.

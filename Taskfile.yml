@@ -6,12 +6,19 @@ vars:
   GREETING: Hello, World!
 
 tasks:
+  build:
+    desc: |
+      Builds the binary
+    cmds:
+      - mkdir -p dist
+      - go build -o dist/bmctl main.go
+
   gen-openapi:
-    desc: | 
+    desc: |
       Generate the (shared) OpenAPI file from the documentation folder.
     cmds:
       - mkdir -p api/gen/8.6-beta
-      - | 
+      - |
         yq-v4.43.1 eval-all \
           '. as $item ireduce ({}; . * $item )' \
           camera/documentation/bmcc6kpro/8.6-beta/swagger/**/* \
