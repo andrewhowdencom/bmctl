@@ -18,7 +18,7 @@ func DoAutoFocusCmd(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	if err := client.LensAutoFocusV1(); err != nil {
+	if err := client.LensAutoFocus(); err != nil {
 		return err
 	}
 
