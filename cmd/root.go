@@ -1,13 +1,10 @@
 package cmd
 
 import (
-	"errors"
 	"os"
 
 	"github.com/spf13/cobra"
 )
-
-var ErrNoSubcommand = errors.New("no subcommand supplied")
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -25,4 +22,11 @@ func Execute() {
 	if err != nil {
 		os.Exit(1)
 	}
+}
+
+func init() {
+	rootCmd.PersistentFlags().StringP("api.server", "a", "", "The HTTP(S) address of the camera API Server")
+	rootCmd.MarkPersistentFlagRequired("api.server")
+
+	rootCmd.AddCommand(lensCmd)
 }
