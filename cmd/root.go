@@ -3,6 +3,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/andrewhowdencom/bmctl/cmd/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -11,7 +12,7 @@ var rootCmd = &cobra.Command{
 	Use:   "bmctl",
 	Short: "Black Magic Control Utility",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return ErrNoSubcommand
+		return errors.ErrNoSubcommand
 	},
 }
 
@@ -29,4 +30,5 @@ func init() {
 	rootCmd.MarkPersistentFlagRequired("api.server")
 
 	rootCmd.AddCommand(lensCmd)
+	rootCmd.AddCommand(videoCmd)
 }
