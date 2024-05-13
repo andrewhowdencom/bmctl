@@ -17,4 +17,5 @@ var videoCmd = &cobra.Command{
 
 func init() {
 	videoCmd.AddCommand(video.ISOCmd)
+	videoCmd.AddCommand(video.WhiteBalanceCMD)
 }

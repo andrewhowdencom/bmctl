@@ -30,8 +30,13 @@ type ISO struct {
 	Value int `json:"iso"`
 }
 
+type WhiteBalance struct {
+	Value int `json:"whiteBalance"`
+}
+
 const (
-	VideoISOMax, VideoISOMin = 2147483647, 0
+	VideoISOMax, VideoISOMin                   = 2147483647, 0
+	VideoWhiteBalanceMax, VideoWhiteBalanceMin = 10000, 2500
 )
 
 // VideoSetISO sets the ISO of the video
@@ -70,4 +75,38 @@ func (c *Client) VideoGetISO() (int, error) {
 	}
 
 	return resp.Value, nil
+}
+
+// VideoGetWhiteBalance sets the WhiteBalance for the video.
+func (c *Client) VideoGetWhiteBalance() (int, error) {
+	req, err := c.NewRequest(http.MethodGet, "/control/api/v1/video/whiteBalance", nil)
+	if err != nil {
+		return 0, err
+	}
+
+	resp := &WhiteBalance{}
+
+	if err := c.Do(req, resp); err != nil {
+		return 0, err
+	}
+
+	return resp.Value, nil
+}
+
+// VideoSetISO sets the ISO of the video
+func (c *Client) VideoSetWhiteBalance(wb int) error {
+	body := &WhiteBalance{
+		Value: wb,
+	}
+
+	if wb < VideoWhiteBalanceMin || wb > VideoWhiteBalanceMax {
+		return fmt.Errorf("%w: %d-%d (%d)", ErrOutOfRange, VideoWhiteBalanceMin, VideoWhiteBalanceMax, wb)
+	}
+
+	req, err := c.NewRequest(http.MethodPut, "/control/api/v1/video/whiteBalance", body)
+	if err != nil {
+		return err
+	}
+
+	return c.Do(req, nil)
 }
