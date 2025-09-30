@@ -28,17 +28,28 @@ func DoSetInput(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	all, _ := cmd.Flags().GetBool("all")
+	if all {
+		err = client.AudioSetAllInputs(args[0])
+		if err != nil {
+			return err
+		}
+		fmt.Println("Audio input set for all channels successfully")
+		return nil
+	}
+
 	channelIndex, _ := cmd.Flags().GetInt("channel")
 	err = client.AudioSetInput(channelIndex, args[0])
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Audio input set successfully")
+	fmt.Printf("Audio input for channel %d set successfully\n", channelIndex)
 
 	return nil
 }
 
 func init() {
 	SetInputCmd.Flags().IntP("channel", "c", 0, "The channel index to set the input for")
+	SetInputCmd.Flags().Bool("all", false, "Set the input for all channels")
 }

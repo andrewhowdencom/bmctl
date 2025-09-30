@@ -40,3 +40,15 @@ func (c *Client) AudioSetInput(channelIndex int, input string) error {
 
 	return c.Do(req, nil)
 }
+
+// AudioSetAllInputs sets the audio input for all channels (0 and 1)
+func (c *Client) AudioSetAllInputs(input string) error {
+	// Assuming 2 channels based on user feedback ("left and right")
+	for i := 0; i < 2; i++ {
+		err := c.AudioSetInput(i, input)
+		if err != nil {
+			return fmt.Errorf("failed to set input for channel %d: %w", i, err)
+		}
+	}
+	return nil
+}
