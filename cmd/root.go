@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 
 	"github.com/andrewhowdencom/bmctl/cmd/errors"
@@ -49,6 +50,8 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+	logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
+
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
@@ -56,7 +59,7 @@ func initConfig() {
 		// Find home directory.
 		home, err := homedir.Dir()
 		if err != nil {
-			fmt.Println(err)
+			logger.Error("could not find home directory", "error", err)
 			os.Exit(1)
 		}
 
@@ -69,7 +72,14 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			// Config file not found; prompt user to create one.
+			logger.Info("no config file found, consider creating one at ~/.config/bmctl/config.yaml")
+		} else {
+			// A non-trivial error occurred, so we should probably exit.
+			logger.Error("could not read config file", "error", err)
+			os.Exit(1)
+		}
 	}
 }
