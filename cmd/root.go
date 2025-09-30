@@ -44,6 +44,7 @@ func init() {
 
 	rootCmd.AddCommand(lensCmd)
 	rootCmd.AddCommand(videoCmd)
+	rootCmd.AddCommand(audioCmd)
 }
 
 // initConfig reads in config file and ENV variables if set.
