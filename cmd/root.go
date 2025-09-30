@@ -1,16 +1,27 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/andrewhowdencom/bmctl/cmd/errors"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
+
+var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "bmctl",
 	Short: "Black Magic Control Utility",
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		if !viper.IsSet("api.server") {
+			return fmt.Errorf("api.server must be set in config, or via the --api.server flag")
+		}
+		return nil
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return errors.ErrNoSubcommand
 	},
@@ -26,9 +37,38 @@ func Execute() {
 }
 
 func init() {
+	cobra.OnInitialize(initConfig)
+
 	rootCmd.PersistentFlags().StringP("api.server", "a", "", "The HTTP(S) address of the camera API Server")
-	rootCmd.MarkPersistentFlagRequired("api.server")
+	viper.BindPFlag("api.server", rootCmd.PersistentFlags().Lookup("api.server"))
 
 	rootCmd.AddCommand(lensCmd)
 	rootCmd.AddCommand(videoCmd)
+}
+
+// initConfig reads in config file and ENV variables if set.
+func initConfig() {
+	if cfgFile != "" {
+		// Use config file from the flag.
+		viper.SetConfigFile(cfgFile)
+	} else {
+		// Find home directory.
+		home, err := homedir.Dir()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		// Search config in home directory with name ".bmctl" (without extension).
+		viper.AddConfigPath(fmt.Sprintf("%s/.config/bmctl", home))
+		viper.SetConfigName("config")
+		viper.SetConfigType("yaml")
+	}
+
+	viper.AutomaticEnv() // read in environment variables that match
+
+	// If a config file is found, read it in.
+	if err := viper.ReadInConfig(); err == nil {
+		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	}
 }
