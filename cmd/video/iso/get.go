@@ -5,6 +5,7 @@ import (
 
 	"github.com/andrewhowdencom/bmctl/client"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // GetISOCmd represents the lens command
@@ -15,7 +16,7 @@ var GetISOCmd = &cobra.Command{
 }
 
 func DoGetISO(cmd *cobra.Command, args []string) error {
-	client, err := client.New(cmd.Flags().Lookup("api.server").Value.String())
+	client, err := client.New(viper.GetString("api.server"))
 	if err != nil {
 		return err
 	}
