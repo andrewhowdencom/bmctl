@@ -13,8 +13,9 @@ import (
 var GetInputCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get the audio input for a channel",
-	Long: `Retrieves the name of the active audio input source currently routed to the specified channel.
-Common outputs include "Camera - Left", "Camera - Right", "XLR 1", "XLR 2", or "3.5mm Left".`,
+	Long: `Retrieves the name of the active audio input source currently
+routed to the specified channel. Common outputs include "Camera - Left",
+"Camera - Right", "XLR 1", "XLR 2", or "3.5mm Left".`,
 	Example: `  bmctl audio input get --channel 1
   bmctl audio input get -c 2`,
 	RunE:  DoGetInput,

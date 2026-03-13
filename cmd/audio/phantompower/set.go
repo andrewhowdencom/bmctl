@@ -12,10 +12,12 @@ import (
 var SetPhantomPowerCmd = &cobra.Command{
 	Use:   "set [true|false]",
 	Short: "Set the audio phantom power for a channel",
-	Long: `Enables or disables 48V Phantom Power for the specified audio channel.
-Must be set to true when using active or condenser microphones via XLR connections that require external power.
-WARNING: Ensure this is set to false before hot-plugging sensitive equipment like ribbon mics to prevent electrical damage.
-Use the '--all' flag to bulk apply this power boolean to all active channels.`,
+	Long: `Enables or disables 48V Phantom Power for the specified audio
+channel. Must be set to true when using active or condenser
+microphones via XLR connections that require external power.
+WARNING: Ensure this is set to false before hot-plugging sensitive
+equipment like ribbon mics to prevent electrical damage. Use the
+'--all' flag to bulk apply this power boolean to all active channels.`,
 	Example: `  bmctl audio phantom-power set true --channel 1
   bmctl audio phantom-power set false -c 2
   bmctl audio phantom-power set true --all`,

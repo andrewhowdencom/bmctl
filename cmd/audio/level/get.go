@@ -14,8 +14,9 @@ var GetLevelCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get the audio level for a channel",
 	Long: `Retrieves the current audio gain level for the specified channel.
-Audio levels can be returned as either absolute physical 'Gain' values in decibels (dB),
-or alternatively as a 'Normalised' floating point value (0.0 to 1.0) depending on the camera hardware's precision schema.`,
+Audio levels can be returned as either absolute physical 'Gain' values
+in decibels (dB), or alternatively as a 'Normalised' floating point
+value (0.0 to 1.0) depending on the camera hardware's precision schema.`,
 	Example: `  bmctl audio level get --channel 1
   bmctl audio level get -c 2`,
 	RunE:  DoGetLevel,

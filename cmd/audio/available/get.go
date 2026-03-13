@@ -13,8 +13,10 @@ import (
 var GetAvailableCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get the audio input's current availability for the selected channel",
-	Long: `Returns whether the audio input for the specified channel is currently available.
-Some audio inputs (e.g. physical ports like XLR or 3.5mm) might not be available if they are disconnected or unsupported by the current recording mode.`,
+	Long: `Returns whether the audio input for the specified channel is
+currently available. Some audio inputs (e.g. physical ports like XLR
+or 3.5mm) might not be available if they are disconnected or
+unsupported by the current recording mode.`,
 	Example: `  bmctl audio available get --channel 1
   bmctl audio available get -c 2`,
 	RunE:  DoGetAvailable,

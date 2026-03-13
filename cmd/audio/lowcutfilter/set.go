@@ -12,9 +12,10 @@ import (
 var SetLowCutFilterCmd = &cobra.Command{
 	Use:   "set [true|false]",
 	Short: "Set the audio low cut filter for a channel",
-	Long: `Enables or disables the low cut filter for the specified audio channel.
-When set to true, low-frequency rumble (like wind or handling noise) is filtered out before recording.
-Use the '--all' flag to bulk apply this filter boolean to all active channels.`,
+	Long: `Enables or disables the low cut filter for the specified
+audio channel. When set to true, low-frequency rumble (like wind or
+handling noise) is filtered out before recording. Use the '--all'
+flag to bulk apply this filter boolean to all active channels.`,
 	Example: `  bmctl audio low-cut-filter set true --channel 1
   bmctl audio low-cut-filter set false -c 2
   bmctl audio low-cut-filter set true --all`,
