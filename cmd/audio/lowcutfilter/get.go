@@ -9,10 +9,13 @@ import (
 	"github.com/spf13/viper"
 )
 
-// GetLowCutFilterCmd represents the get audio low-cut-filter command
 var GetLowCutFilterCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get the audio low cut filter for a channel",
+	Long: `Retrieves the current state of the low cut filter (true/false) for the specified audio channel.
+A low cut filter is typically used on microphones to reduce low-frequency rumble such as wind noise, handling noise, or vocal pops.`,
+	Example: `  bmctl audio low-cut-filter get --channel 1
+  bmctl audio low-cut-filter get -c 2`,
 	RunE:  DoGetLowCutFilter,
 }
 

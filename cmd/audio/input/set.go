@@ -12,6 +12,13 @@ import (
 var SetInputCmd = &cobra.Command{
 	Use:   "set [input]",
 	Short: "Set the audio input for a channel",
+	Long: `Sets the specific audio input source to be routed to the specified channel.
+This defines where the camera's recording channel gets its audio signal from.
+You must use exactly one of the supported input schema labels for your camera platform (e.g. "XLR 1").
+Use the '--all' flag to bulk apply this input source to all available recording channels.`,
+	Example: `  bmctl audio input set "XLR 1" --channel 1
+  bmctl audio input set "Camera - Left" -c 2
+  bmctl audio input set "3.5mm Left" --all`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
 			return errors.New("requires an input argument")

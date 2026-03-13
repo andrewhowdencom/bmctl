@@ -9,10 +9,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-// GetPhantomPowerCmd represents the get audio phantom-power command
 var GetPhantomPowerCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get the audio phantom power for a channel",
+	Long: `Retrieves the current state of 48V Phantom Power (true/false) on the specified audio channel.
+Phantom power is required to drive active microphones like condensers, which do not have an internal battery.
+It is typically applied to XLR connections. Ensure Phantom Power is OFF before plugging in ribbon microphones as it may damage them.`,
+	Example: `  bmctl audio phantom-power get --channel 1
+  bmctl audio phantom-power get -c 2`,
 	RunE:  DoGetPhantomPower,
 }
 

@@ -14,12 +14,10 @@ import (
 )
 
 func TestGetSupportedInputsCmd(t *testing.T) {
-	expectedResponse := client.AudioSupportedInputs{
-		SupportedInputs: []client.SupportedInput{
-			{
-				Schema:    client.AudioInput{Input: "Camera - Left"},
-				Available: true,
-			},
+	expectedResponse := []client.SupportedInput{
+		{
+			Schema:    client.AudioInput{Input: "Camera - Left"},
+			Available: true,
 		},
 	}
 

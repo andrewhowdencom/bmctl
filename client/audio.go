@@ -162,12 +162,12 @@ if err != nil {
 return nil, err
 }
 
-out := AudioSupportedInputs{}
+var out []SupportedInput
 if err := c.Do(req, &out); err != nil {
 return nil, err
 }
 
-return &out, nil
+return &AudioSupportedInputs{SupportedInputs: out}, nil
 }
 
 func (c *Client) AudioGetLevel(channelIndex int) (*AudioLevel, error) {

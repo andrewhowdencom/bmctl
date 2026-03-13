@@ -13,6 +13,11 @@ import (
 var GetDescriptionCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get the audio input description for a channel",
+	Long: `Retrieves a detailed description of the audio input assigned to the specified channel.
+This includes hardware capabilities such as the physical gain range (e.g., -60dB to 12dB),
+and whether the input supports Phantom Power (48V), Low Cut Filters, or Attenuation Padding (-10dB/-20dB).`,
+	Example: `  bmctl audio description get --channel 1
+  bmctl audio description get -c 2`,
 	RunE:  DoGetDescription,
 }
 

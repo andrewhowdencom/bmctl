@@ -9,10 +9,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-// GetPaddingCmd represents the get audio padding command
 var GetPaddingCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get the audio padding for a channel",
+	Long: `Retrieves the current state of attenuation padding (true/false) for the specified audio channel.
+Audio padding attenuates (lowers) the incoming signal level before the pre-amp.
+It is extremely useful to prevent digital clipping when recording very loud sound sources via line or mic inputs.`,
+	Example: `  bmctl audio padding get --channel 1
+  bmctl audio padding get -c 2`,
 	RunE:  DoGetPadding,
 }
 

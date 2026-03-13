@@ -1,0 +1,8 @@
+agents:
+    - antigravity
+skills:
+    - ghcr.io/andrewhowdencom/skills.documentation:latest
+    - ghcr.io/andrewhowdencom/skills.git:latest
+    - ghcr.io/andrewhowdencom/skills.go:latest
+    - ghcr.io/andrewhowdencom/skills.cli:latest
+    - ghcr.io/andrewhowdencom/skills.taskfile:latest

@@ -9,10 +9,15 @@ import (
 	"github.com/spf13/viper"
 )
 
-// SetPaddingCmd represents the set audio padding command
 var SetPaddingCmd = &cobra.Command{
 	Use:   "set [true|false]",
 	Short: "Set the audio padding for a channel",
+	Long: `Enables or disables attenuation padding for the specified audio channel.
+Set to true to attenuate loud analog audio signals before the pre-amp and avoid clipping/distortion.
+Use the '--all' flag to bulk apply this padding boolean to all active channels.`,
+	Example: `  bmctl audio padding set true --channel 1
+  bmctl audio padding set false -c 2
+  bmctl audio padding set true --all`,
 	Args:  cobra.ExactArgs(1),
 	RunE:  DoSetPadding,
 }

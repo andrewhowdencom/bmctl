@@ -13,7 +13,12 @@ import (
 var SetLevelCmd = &cobra.Command{
 	Use:   "set",
 	Short: "Set the audio level for a channel",
-	Long:  `Set the audio level for a channel using either the --gain flag or the --normalised flag. If both are provided, gain will be prioritized and level would be ignored according to the API specification.`,
+	Long:  `Set the audio input gain level for a channel using either the --gain flag (in dB) or the --normalised flag (float 0.0 to 1.0).
+If both are provided, absolute gain will be prioritized. Typical dB ranges fall between -60dB and +12dB.
+Increasing gain boosts quiet microphones but raises the noise floor. Use '--all' to apply settings globally.`,
+	Example: `  bmctl audio level set --gain 4.5 --channel 1
+  bmctl audio level set --normalised 0.75 -c 2
+  bmctl audio level set --gain 0.0 --all`,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		hasGain := cmd.Flags().Changed("gain")
 		hasNorm := cmd.Flags().Changed("normalised")
