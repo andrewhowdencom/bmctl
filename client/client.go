@@ -52,9 +52,11 @@ func (c *Client) Do(in *http.Request, out interface{}) error {
 		return fmt.Errorf("%w: %d", ErrUnsupportedHTTPResponseCode, resp.StatusCode)
 	}
 
-	d := json.NewDecoder(resp.Body)
-	if err := d.Decode(out); err != nil {
-		return fmt.Errorf("%w: %s", ErrUnmarshalFailed, err)
+	if out != nil {
+		d := json.NewDecoder(resp.Body)
+		if err := d.Decode(out); err != nil {
+			return fmt.Errorf("%w: %s", ErrUnmarshalFailed, err)
+		}
 	}
 
 	return nil

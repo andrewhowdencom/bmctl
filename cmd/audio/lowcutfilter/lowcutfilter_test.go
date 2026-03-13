@@ -1,0 +1,73 @@
+package lowcutfilter_test
+
+import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+	"testing"
+
+	"github.com/andrewhowdencom/bmctl/client"
+	"github.com/andrewhowdencom/bmctl/cmd/audio/lowcutfilter"
+	"github.com/spf13/viper"
+)
+
+func TestGetLowCutFilterCmd(t *testing.T) {
+	expectedResponse := client.AudioLowCutFilter{LowCutFilter: true}
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/control/api/v1/audio/channel/1/lowCutFilter" {
+			t.Errorf("Expected path /control/api/v1/audio/channel/1/lowCutFilter, got %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(expectedResponse)
+	}))
+	defer server.Close()
+
+	viper.Set("api.server", server.URL)
+
+	b := new(bytes.Buffer)
+	lowcutfilter.LowCutFilterCmd.SetOut(b)
+	lowcutfilter.LowCutFilterCmd.SetArgs([]string{"get", "--channel", "1"})
+
+	err := lowcutfilter.LowCutFilterCmd.Execute()
+	if err != nil {
+		t.Fatalf("Execute failed: %v", err)
+	}
+
+	output := b.String()
+	if !strings.Contains(output, "lowCutFilter") || !strings.Contains(output, "true") {
+		t.Errorf("Output did not contain expected body. Output: %s", output)
+	}
+}
+
+func TestSetLowCutFilterCmd(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/control/api/v1/audio/channel/0/lowCutFilter" {
+			t.Errorf("Expected path /control/api/v1/audio/channel/0/lowCutFilter, got %s", r.URL.Path)
+		}
+		
+		var reqBody client.AudioLowCutFilter
+		if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
+			t.Errorf("Failed to decode request body: %v", err)
+		}
+
+		if reqBody.LowCutFilter {
+			t.Errorf("Expected LowCutFilter to be false, got %v", reqBody.LowCutFilter)
+		}
+		
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer server.Close()
+
+	viper.Set("api.server", server.URL)
+
+	b := new(bytes.Buffer)
+	lowcutfilter.LowCutFilterCmd.SetOut(b)
+	lowcutfilter.LowCutFilterCmd.SetArgs([]string{"set", "--channel", "0", "false"})
+
+	err := lowcutfilter.LowCutFilterCmd.Execute()
+	if err != nil {
+		t.Fatalf("Execute failed: %v", err)
+	}
+}

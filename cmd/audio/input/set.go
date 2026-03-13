@@ -2,7 +2,6 @@ package input
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/andrewhowdencom/bmctl/client"
 	"github.com/spf13/cobra"
@@ -34,7 +33,7 @@ func DoSetInput(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
-		fmt.Println("Audio input set for all channels successfully")
+		cmd.Println("Audio input set for all channels successfully")
 		return nil
 	}
 
@@ -44,7 +43,7 @@ func DoSetInput(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("Audio input for channel %d set successfully\n", channelIndex)
+	cmd.Printf("Audio input for channel %d set successfully\n", channelIndex)
 
 	return nil
 }

@@ -1,7 +1,6 @@
 package input
 
 import (
-	"fmt"
 
 	"github.com/andrewhowdencom/bmctl/client"
 	"github.com/spf13/cobra"
@@ -27,7 +26,7 @@ func DoGetInput(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Println(input)
+	cmd.Println(input)
 
 	return nil
 }
