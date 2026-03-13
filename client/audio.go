@@ -115,8 +115,8 @@ SupportedInputs []SupportedInput `json:"supportedInputs"`
 }
 
 type SupportedInput struct {
-Schema    AudioInput `json:"schema"`
-Available bool       `json:"available"`
+	Input     string `json:"input"`
+	Available bool   `json:"available"`
 }
 
 type AudioLevel struct {

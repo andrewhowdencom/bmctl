@@ -35,7 +35,7 @@ func DoGetSupportedInputs(cmd *cobra.Command, args []string) error {
 	w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
 	_, _ = fmt.Fprintln(w, "INPUT\tAVAILABLE")
 	for _, input := range inputs.SupportedInputs {
-		_, _ = fmt.Fprintf(w, "%s\t%v\n", input.Schema.Input, input.Available)
+		_, _ = fmt.Fprintf(w, "%s\t%v\n", input.Input, input.Available)
 	}
 	_ = w.Flush()
 
