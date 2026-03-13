@@ -40,7 +40,9 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringP("api.server", "a", "", "The HTTP(S) address of the camera API Server")
-	viper.BindPFlag("api.server", rootCmd.PersistentFlags().Lookup("api.server"))
+	if err := viper.BindPFlag("api.server", rootCmd.PersistentFlags().Lookup("api.server")); err != nil {
+		fmt.Printf("failed to bind api.server flag: %v\n", err)
+	}
 
 	rootCmd.AddCommand(lensCmd)
 	rootCmd.AddCommand(videoCmd)

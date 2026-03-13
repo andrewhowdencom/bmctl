@@ -1,6 +1,8 @@
 package input
 
 import (
+	"fmt"
+	"text/tabwriter"
 
 	"github.com/andrewhowdencom/bmctl/client"
 	"github.com/spf13/cobra"
@@ -26,7 +28,10 @@ func DoGetInput(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	cmd.Println(input)
+	w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
+	_, _ = fmt.Fprintln(w, "PROPERTY\tVALUE")
+	_, _ = fmt.Fprintf(w, "Input\t%s\n", input)
+	_ = w.Flush()
 
 	return nil
 }

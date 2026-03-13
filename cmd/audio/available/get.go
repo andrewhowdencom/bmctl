@@ -1,7 +1,8 @@
 package available
 
 import (
-	"encoding/json"
+	"fmt"
+	"text/tabwriter"
 
 	"github.com/andrewhowdencom/bmctl/client"
 	"github.com/spf13/cobra"
@@ -27,12 +28,10 @@ func DoGetAvailable(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	availableObj := client.AudioAvailable{Available: available}
-	out, err := json.MarshalIndent(availableObj, "", "  ")
-	if err != nil {
-		return err
-	}
-	cmd.Println(string(out))
+	w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
+	_, _ = fmt.Fprintln(w, "PROPERTY\tVALUE")
+	_, _ = fmt.Fprintf(w, "Available\t%v\n", available)
+	_ = w.Flush()
 
 	return nil
 }

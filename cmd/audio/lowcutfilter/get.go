@@ -1,7 +1,8 @@
 package lowcutfilter
 
 import (
-	"encoding/json"
+	"fmt"
+	"text/tabwriter"
 
 	"github.com/andrewhowdencom/bmctl/client"
 	"github.com/spf13/cobra"
@@ -27,12 +28,10 @@ func DoGetLowCutFilter(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	filterObj := client.AudioLowCutFilter{LowCutFilter: filter}
-	out, err := json.MarshalIndent(filterObj, "", "  ")
-	if err != nil {
-		return err
-	}
-	cmd.Println(string(out))
+	w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
+	_, _ = fmt.Fprintln(w, "PROPERTY\tVALUE")
+	_, _ = fmt.Fprintf(w, "Low Cut Filter\t%v\n", filter)
+	_ = w.Flush()
 
 	return nil
 }

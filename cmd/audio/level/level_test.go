@@ -23,7 +23,7 @@ func TestGetLevelCmd(t *testing.T) {
 		if r.URL.Path != "/control/api/v1/audio/channel/1/level" {
 			t.Errorf("Expected path /control/api/v1/audio/channel/1/level, got %s", r.URL.Path)
 		}
-		json.NewEncoder(w).Encode(expectedResponse)
+		_ = json.NewEncoder(w).Encode(expectedResponse)
 	}))
 	defer server.Close()
 
@@ -39,12 +39,28 @@ func TestGetLevelCmd(t *testing.T) {
 	}
 
 	output := b.String()
-	if !strings.Contains(output, "gain") || !strings.Contains(output, "4.5") {
+	if !strings.Contains(output, "Gain") || !strings.Contains(output, "4.5") {
 		t.Errorf("Output did not contain expected body. Output: %s", output)
 	}
 }
 
+func resetFlags() {
+	if f := level.SetLevelCmd.Flags().Lookup("gain"); f != nil {
+		f.Changed = false
+	}
+	if f := level.SetLevelCmd.Flags().Lookup("normalised"); f != nil {
+		f.Changed = false
+	}
+	if f := level.SetLevelCmd.Flags().Lookup("all"); f != nil {
+		f.Changed = false
+	}
+	if f := level.SetLevelCmd.Flags().Lookup("channel"); f != nil {
+		f.Changed = false
+	}
+}
+
 func TestSetLevelCmd_Gain(t *testing.T) {
+	resetFlags()
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/control/api/v1/audio/channel/0/level" {
 			t.Errorf("Expected path /control/api/v1/audio/channel/0/level, got %s", r.URL.Path)
@@ -76,6 +92,7 @@ func TestSetLevelCmd_Gain(t *testing.T) {
 }
 
 func TestSetLevelCmd_Normalised(t *testing.T) {
+	resetFlags()
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/control/api/v1/audio/channel/2/level" {
 			t.Errorf("Expected path /control/api/v1/audio/channel/2/level, got %s", r.URL.Path)
@@ -110,6 +127,7 @@ func TestSetLevelCmd_Normalised(t *testing.T) {
 }
 
 func TestSetLevelCmd_NoArgs(t *testing.T) {
+	resetFlags()
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))

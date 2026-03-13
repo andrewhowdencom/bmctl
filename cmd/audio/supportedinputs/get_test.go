@@ -27,7 +27,7 @@ func TestGetSupportedInputsCmd(t *testing.T) {
 		if r.URL.Path != "/control/api/v1/audio/channel/1/supportedInputs" {
 			t.Errorf("Expected path /control/api/v1/audio/channel/1/supportedInputs, got %s", r.URL.Path)
 		}
-		json.NewEncoder(w).Encode(expectedResponse)
+		_ = json.NewEncoder(w).Encode(expectedResponse)
 	}))
 	defer server.Close()
 

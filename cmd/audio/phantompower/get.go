@@ -1,7 +1,8 @@
 package phantompower
 
 import (
-	"encoding/json"
+	"fmt"
+	"text/tabwriter"
 
 	"github.com/andrewhowdencom/bmctl/client"
 	"github.com/spf13/cobra"
@@ -27,12 +28,10 @@ func DoGetPhantomPower(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	powerObj := client.AudioPhantomPower{PhantomPower: power}
-	out, err := json.MarshalIndent(powerObj, "", "  ")
-	if err != nil {
-		return err
-	}
-	cmd.Println(string(out))
+	w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
+	_, _ = fmt.Fprintln(w, "PROPERTY\tVALUE")
+	_, _ = fmt.Fprintf(w, "Phantom Power\t%v\n", power)
+	_ = w.Flush()
 
 	return nil
 }

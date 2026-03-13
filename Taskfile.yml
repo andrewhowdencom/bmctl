@@ -1,0 +1,31 @@
+version: '3'
+
+tasks:
+  setup:
+    desc: Installs required tools and dependencies.
+    cmds:
+      - go mod download
+
+  generate:
+    desc: Generates code as required.
+    cmds:
+      - go generate ./...
+
+  lint:
+    desc: Runs code linters.
+    cmds:
+      - golangci-lint run ./...
+
+  test:
+    desc: Runs unit tests.
+    cmds:
+      - go test -race ./...
+
+  build:
+    desc: Compiles the application binary.
+    cmds:
+      - go build -v -o bmctl main.go
+
+  validate:
+    desc: Runs lints, unit tests, smoke tests, and the build. Run this before committing.
+    deps: [lint, test, build]

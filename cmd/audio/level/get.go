@@ -1,7 +1,8 @@
 package level
 
 import (
-	"encoding/json"
+	"fmt"
+	"text/tabwriter"
 
 	"github.com/andrewhowdencom/bmctl/client"
 	"github.com/spf13/cobra"
@@ -27,11 +28,19 @@ func DoGetLevel(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	out, err := json.MarshalIndent(level, "", "  ")
-	if err != nil {
-		return err
+	w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
+	_, _ = fmt.Fprintln(w, "PROPERTY\tVALUE")
+	if level.Gain != nil {
+		_, _ = fmt.Fprintf(w, "Gain\t%v\n", *level.Gain)
+	} else {
+		_, _ = fmt.Fprintln(w, "Gain\t<nil>")
 	}
-	cmd.Println(string(out))
+	if level.Normalised != nil {
+		_, _ = fmt.Fprintf(w, "Normalised\t%v\n", *level.Normalised)
+	} else {
+		_, _ = fmt.Fprintln(w, "Normalised\t<nil>")
+	}
+	_ = w.Flush()
 
 	return nil
 }

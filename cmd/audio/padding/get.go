@@ -1,7 +1,8 @@
 package padding
 
 import (
-	"encoding/json"
+	"fmt"
+	"text/tabwriter"
 
 	"github.com/andrewhowdencom/bmctl/client"
 	"github.com/spf13/cobra"
@@ -27,12 +28,10 @@ func DoGetPadding(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	paddingObj := client.AudioPadding{Padding: padding}
-	out, err := json.MarshalIndent(paddingObj, "", "  ")
-	if err != nil {
-		return err
-	}
-	cmd.Println(string(out))
+	w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
+	_, _ = fmt.Fprintln(w, "PROPERTY\tVALUE")
+	_, _ = fmt.Fprintf(w, "Padding\t%v\n", padding)
+	_ = w.Flush()
 
 	return nil
 }

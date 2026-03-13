@@ -30,7 +30,7 @@ func TestAudioGetDescription(t *testing.T) {
 		if r.Method != http.MethodGet {
 			t.Errorf("Expected method GET, got %s", r.Method)
 		}
-		json.NewEncoder(w).Encode(expectedResponse)
+		_ = json.NewEncoder(w).Encode(expectedResponse)
 	}))
 	defer server.Close()
 
@@ -65,7 +65,7 @@ func TestAudioGetLevel(t *testing.T) {
 		if r.Method != http.MethodGet {
 			t.Errorf("Expected method GET, got %s", r.Method)
 		}
-		json.NewEncoder(w).Encode(expectedResponse)
+		_ = json.NewEncoder(w).Encode(expectedResponse)
 	}))
 	defer server.Close()
 
@@ -131,9 +131,10 @@ func TestAudioGetSetPhantomPower(t *testing.T) {
 			t.Errorf("Expected path ..., got %s", r.URL.Path)
 		}
 
-		if r.Method == http.MethodGet {
-			json.NewEncoder(w).Encode(client.AudioPhantomPower{PhantomPower: true})
-		} else if r.Method == http.MethodPut {
+		switch r.Method {
+		case http.MethodGet:
+			_ = json.NewEncoder(w).Encode(client.AudioPhantomPower{PhantomPower: true})
+		case http.MethodPut:
 			var reqBody client.AudioPhantomPower
 			if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
 				t.Errorf("Failed to decode request body: %v", err)

@@ -28,6 +28,18 @@ Usage:
 
 ```
 
+## Supported Commands
+
+`bmctl` currently supports a subset of commands from the Blackmagic API:
+- `bmctl audio`: Control camera audio components including inputs (`input`, `description`, `supported-inputs`), levels (`level`), `phantom-power`, `padding`, and `low-cut-filter`.
+- `bmctl video`: Set ISO and white balance.
+- `bmctl lens`: Control lens metadata and features.
+
+To view detailed help on any command, use the `--help` flag:
+```bash
+$ bmctl audio level set --help
+```
+
 [Bingo]: https://github.com/bwplotka/bingo
 
 

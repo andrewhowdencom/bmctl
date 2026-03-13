@@ -31,7 +31,7 @@ func TestGetDescriptionCmd(t *testing.T) {
 		if r.URL.Path != "/control/api/v1/audio/channel/0/input/description" {
 			t.Errorf("Expected path /control/api/v1/audio/channel/0/input/description, got %s", r.URL.Path)
 		}
-		json.NewEncoder(w).Encode(expectedResponse)
+		_ = json.NewEncoder(w).Encode(expectedResponse)
 	}))
 	defer server.Close()
 
@@ -47,7 +47,7 @@ func TestGetDescriptionCmd(t *testing.T) {
 	}
 
 	output := b.String()
-	if !strings.Contains(output, "GainRange") && !strings.Contains(output, "gainRange") || (!strings.Contains(output, "-60") && !strings.Contains(output, "-60.0")) {
+	if !strings.Contains(output, "Gain Min") || !strings.Contains(output, "-60") {
 		t.Errorf("Output did not contain expected body. Output: %s", output)
 	}
 }

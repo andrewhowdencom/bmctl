@@ -1,7 +1,8 @@
 package supportedinputs
 
 import (
-	"encoding/json"
+	"fmt"
+	"text/tabwriter"
 
 	"github.com/andrewhowdencom/bmctl/client"
 	"github.com/spf13/cobra"
@@ -27,11 +28,12 @@ func DoGetSupportedInputs(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	out, err := json.MarshalIndent(inputs, "", "  ")
-	if err != nil {
-		return err
+	w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
+	_, _ = fmt.Fprintln(w, "INPUT\tAVAILABLE")
+	for _, input := range inputs.SupportedInputs {
+		_, _ = fmt.Fprintf(w, "%s\t%v\n", input.Schema.Input, input.Available)
 	}
-	cmd.Println(string(out))
+	_ = w.Flush()
 
 	return nil
 }

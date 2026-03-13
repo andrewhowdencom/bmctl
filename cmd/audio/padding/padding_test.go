@@ -20,7 +20,7 @@ func TestGetPaddingCmd(t *testing.T) {
 		if r.URL.Path != "/control/api/v1/audio/channel/1/padding" {
 			t.Errorf("Expected path /control/api/v1/audio/channel/1/padding, got %s", r.URL.Path)
 		}
-		json.NewEncoder(w).Encode(expectedResponse)
+		_ = json.NewEncoder(w).Encode(expectedResponse)
 	}))
 	defer server.Close()
 
@@ -36,7 +36,7 @@ func TestGetPaddingCmd(t *testing.T) {
 	}
 
 	output := b.String()
-	if !strings.Contains(output, "padding") || !strings.Contains(output, "true") {
+	if !strings.Contains(output, "Padding") || !strings.Contains(output, "true") {
 		t.Errorf("Output did not contain expected body. Output: %s", output)
 	}
 }
