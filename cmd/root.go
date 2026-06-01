@@ -43,6 +43,9 @@ func init() {
 	rootCmd.PersistentFlags().StringP("api.server", "a", "", "The HTTP(S) address of the camera API Server")
 	viper.BindPFlag("api.server", rootCmd.PersistentFlags().Lookup("api.server"))
 
+	rootCmd.PersistentFlags().Bool("curl", false, "Print equivalent curl command to stderr before executing")
+	viper.BindPFlag("curl", rootCmd.PersistentFlags().Lookup("curl"))
+
 	rootCmd.AddCommand(lensCmd)
 	rootCmd.AddCommand(videoCmd)
 	rootCmd.AddCommand(audioCmd)
