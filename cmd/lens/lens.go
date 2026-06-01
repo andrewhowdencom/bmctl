@@ -1,6 +1,8 @@
 package lens
 
 import (
+	"os"
+
 	"github.com/andrewhowdencom/bmctl/client"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -14,7 +16,12 @@ var AutoFocusCmd = &cobra.Command{
 }
 
 func DoAutoFocusCmd(cmd *cobra.Command, args []string) error {
-	client, err := client.New(viper.GetString("api.server"))
+	opts := []client.Option{}
+	if viper.GetBool("curl") {
+		opts = append(opts, client.WithCurlOutput(os.Stderr))
+	}
+
+	client, err := client.New(viper.GetString("api.server"), opts...)
 	if err != nil {
 		return err
 	}
