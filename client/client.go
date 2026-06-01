@@ -5,7 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
+
+	"github.com/moul/http2curl"
 )
 
 var (
@@ -23,19 +26,46 @@ type Client struct {
 	// addr is the address of the client. For example, "http://192.168.1.1"
 	addr string
 
-	http *http.Client
+	http    *http.Client
+	curlOut io.Writer
 }
 
-func New(addr string, _ ...Option) (*Client, error) {
-	return &Client{
+func New(addr string, opts ...Option) (*Client, error) {
+	c := &Client{
 		addr: addr,
 
 		http: http.DefaultClient,
-	}, nil
+	}
+
+	for _, o := range opts {
+		if err := o(c); err != nil {
+			return nil, err
+		}
+	}
+
+	return c, nil
+}
+
+// WithCurlOutput configures the client to print an equivalent curl command to w
+// before executing the request.
+func WithCurlOutput(w io.Writer) Option {
+	return func(c *Client) error {
+		c.curlOut = w
+		return nil
+	}
 }
 
 // Do runs an arbitrary HTTP request to the server, filling the object (if possible) with the
 func (c *Client) Do(in *http.Request, out interface{}) error {
+	if c.curlOut != nil {
+		cmd, err := http2curl.GetCurlCommand(in)
+		if err != nil {
+			return fmt.Errorf("%w: %s", ErrFailedHTTPRequestDo, err)
+		}
+
+		fmt.Fprintln(c.curlOut, cmd)
+	}
+
 	resp, err := c.http.Do(in)
 
 	if err != nil {
@@ -62,12 +92,12 @@ func (c *Client) Do(in *http.Request, out interface{}) error {
 
 // NewRequest takes the input request object, and marshals it into the expected HTTP request, complete with headers.
 func (c *Client) NewRequest(method string, path string, in interface{}) (*http.Request, error) {
-	buf := &bytes.Buffer{}
-	if err := json.NewEncoder(buf).Encode(in); err != nil {
+	b, err := json.Marshal(in)
+	if err != nil {
 		return nil, fmt.Errorf("%w: %s", ErrMarshalFailed, err)
 	}
 
-	req, err := http.NewRequest(method, c.addr+path, buf)
+	req, err := http.NewRequest(method, c.addr+path, bytes.NewReader(b))
 	if err != nil {
 		return nil, fmt.Errorf("%w: %s", ErrFailedHTTPRequestCreation, err)
 	}
