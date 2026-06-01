@@ -2,6 +2,7 @@ package whitebalance
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/andrewhowdencom/bmctl/client"
 	"github.com/spf13/cobra"
@@ -16,7 +17,12 @@ var GetWhiteBalanceCmd = &cobra.Command{
 }
 
 func DoGetWhiteBalance(cmd *cobra.Command, args []string) error {
-	client, err := client.New(viper.GetString("api.server"))
+	opts := []client.Option{}
+	if viper.GetBool("curl") {
+		opts = append(opts, client.WithCurlOutput(os.Stderr))
+	}
+
+	client, err := client.New(viper.GetString("api.server"), opts...)
 	if err != nil {
 		return err
 	}
